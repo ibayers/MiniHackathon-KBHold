@@ -1,7 +1,3 @@
----
-
-## Team
-
 **Team Name:** Mie Ayam Mul
 
 | Member | Role |
@@ -9,7 +5,6 @@
 | **Kian Aurelio Wibowo** | Development |
 | **Bryan Carlos Matruti** | Development |
 
----
 
 
 # KBhold
