@@ -6,6 +6,7 @@ qrcode[pil]
 numpy
 flask-cors
 gunicorn
+python-dotenv
 
 # Version
 # we using python 3.10.12

@@ -9,9 +9,13 @@ import qrcode
 import numpy as np
 from flask_cors import CORS
 import os
+from dotenv import load_dotenv
+
+# Load .env file jika ada (untuk dev lokal)
+load_dotenv()
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, origins="*")  # Allow all origins (Vercel + local)
 
 keranjang_global = {}
 total_harga_global = 0
@@ -171,8 +175,15 @@ def main():
     global keranjang_global, total_harga_global, connected_event, checkout_event
 
     ip_address = get_ip()
-    # url_web = f"http://{ip_address}:5000"
-    url_web = f"http://{ip_address}:5174/live-shopping"
+
+    # FRONTEND_URL = URL Vercel kamu (misal: https://kbhold.vercel.app)
+    # BACKEND_URL  = URL ngrok yang tunnel ke Flask lokal (misal: https://xxxx.ngrok.io)
+    # Jika tidak di-set, default ke IP lokal untuk dev mode
+    frontend_url = os.environ.get("FRONTEND_URL", f"http://{ip_address}:5174")
+    backend_url  = os.environ.get("BACKEND_URL",  f"http://{ip_address}:5000")
+
+    # Embed backend URL sebagai query param agar frontend tahu harus hit ke mana
+    url_web = f"{frontend_url}/pairing-hub?backend={backend_url}"
 
     flask_thread = threading.Thread(target=run_flask, daemon=True)
     flask_thread.start()

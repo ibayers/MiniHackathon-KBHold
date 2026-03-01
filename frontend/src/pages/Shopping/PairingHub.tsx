@@ -5,6 +5,17 @@ import { Html5QrcodeScanner } from "html5-qrcode";
 // Mengambil URL dari .env, jika tidak ada pakai localhost
 const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
+// Ambil backend URL dari query param jika ada (di-embed oleh Python di QR)
+// Contoh: /pairing-hub?backend=https://xxxx.ngrok.io
+const getBackendUrl = (): string => {
+  if (typeof window !== 'undefined') {
+    const params = new URLSearchParams(window.location.search);
+    const fromQR = params.get('backend');
+    if (fromQR) return fromQR;
+  }
+  return BASE_URL;
+};
+
 const PairingHub: React.FC = () => {
   const navigate = useNavigate();
   const [scanResult, setScanResult] = useState<string | null>(null);
@@ -23,10 +34,14 @@ const PairingHub: React.FC = () => {
       setScanResult(decodedText);
       scanner.clear();
 
+      // Gunakan backend URL dari query param (?backend=...) jika ada,
+      // jika tidak ada fallback ke VITE_API_URL / localhost
+      const backendUrl = getBackendUrl();
+
       try {
-        // panggil backend menggunakan BASE_URL dari environment variable
-        await fetch(`${BASE_URL}/connect`);
-        console.log("Python diberi sinyal untuk mulai kamera");
+        // Kirim sinyal ke Flask lokal untuk nyalakan kamera
+        await fetch(`${backendUrl}/connect`);
+        console.log("Python diberi sinyal untuk mulai kamera via:", backendUrl);
       } catch (err) {
         console.error("Gagal connect ke backend:", err);
       }
