@@ -1,0 +1,184 @@
+@import "tailwindcss";
+
+/* Custom Theme Colors */
+@theme {
+  --color-primary: #06b6d4; /* Electric Cyan for KBhold */
+  --color-accent: #0ea5e9;
+  --color-background-light: #f6f6f8;
+  --color-background-dark: #0a0c12;
+  --color-accent-dark: #161b28;
+  --font-family-display: "Inter", sans-serif;
+}
+
+.main-container * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif !important;
+}
+
+body {
+  background-color: #0a0c12;
+  color: white;
+  min-height: 100dvh;
+}
+main:not([class]) {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 10vh;
+}
+a:not([class]) {
+  text-decoration: none;
+}
+.header-text {
+  display: flex;
+  gap: 0.5em;
+  align-items: center;
+  padding: 0.5em 1em;
+  font-weight: bold;
+  background: none;
+  text-align: center;
+}
+.main-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #2a2a2a; /* Slightly lighter than body, but still dark */
+  padding: 2em 2em;
+  width: 100%;
+  max-width: 500px;
+  border-radius: 4px; /* Slightly rounded corners */
+  box-shadow: 0 0 60px rgba(0, 0, 0, 0.2);
+  border-top: 5px;
+  border-width: 10px 0px 0px 0px;
+  border-style: solid;
+  border-color: var(--color-primary); /* Cyan */
+}
+#github-repo-link {
+  display: flex;
+  gap: 0.5em;
+  margin-top: 0;
+  align-items: center;
+  padding: 0.5em 1em;
+  font-weight: bold;
+  background: none;
+  cursor: pointer;
+  color: var(--color-primary); /* Cyan */
+}
+#github-repo-link:hover {
+  background-color: rgba(6, 182, 212, 0.1); /* Cyan with low opacity */
+}
+.main-container input {
+  padding: 1rem;
+  border-radius: 4px;
+  outline: none;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+  background-color: #3a3a3a; /* Slightly lighter than container background */
+  border: 1px solid #4a4a4a;
+  font-size: 1rem;
+  color: white;
+  margin-top: 7px;
+  width: 300px;
+}
+.main-container button,
+.main-container a,
+.home-link,
+.auth-link {
+  font-size: 16px;
+  padding: 1em;
+  background: none;
+  cursor: pointer;
+  color: white;
+  background: var(--color-primary); /* Cyan */
+  border: none;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+  width: 300px;
+  text-align: center;
+  margin-top: 1em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  font-weight: bold;
+  border: 1px solid var(--color-accent); /* Accent Blue */
+}
+
+a:not([class]) {
+  border: none;
+}
+.main-container button:hover,
+.main-container a:hover,
+.home-link:hover,
+.auth-link:hover {
+  background: var(--color-accent); /* Accent Blue for hover */
+}
+.home-link {
+  margin-bottom: 1em;
+}
+.auth-link {
+  background: transparent;
+  color: var(--color-primary); /* Cyan */
+}
+.auth-link:hover {
+  background: transparent;
+  text-decoration: underline;
+}
+#divider {
+  width: 70%;
+  height: 2px;
+  background-color: var(--color-primary); /* Cyan */
+  margin: 1em 0;
+  border-radius: 100%;
+}
+
+/* Glass Effect */
+.glass {
+  background: rgba(22, 27, 40, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #1e293b 25%, #334155 50%, #1e293b 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.glass-card {
+  background: rgba(30, 61, 138, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.status-pulse {
+  box-shadow: 0 0 0 0 rgba(6, 182, 212, 0.7);
+  animation: pulse-cyan 2s infinite;
+}
+
+@keyframes pulse-cyan {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(6, 182, 212, 0.7);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 10px rgba(6, 182, 212, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(6, 182, 212, 0);
+  }
+}

@@ -1,0 +1,16 @@
+ultralytics
+opencv-python
+flask
+qrcode[pil]
+numpy
+flask-cors
+
+Version
+we using python 3.10.12
+# ultralytics==8.3.0
+# opencv-python==4.10.0.84
+# flask==3.0.0
+# qrcode[pil]==8.0
+# numpy==1.26.0
+# python-dotenv==1.0.0
+# supabase==2.6.0
