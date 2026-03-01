@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import supabase from '../../supabase';
 
 export default function ExitSettlement() {
   const navigate = useNavigate();
@@ -11,6 +12,66 @@ export default function ExitSettlement() {
   const capturedAmount = cartData.total_harga;
   const holdAmount = capturedAmount * 1.15;
   const releasedAmount = holdAmount - capturedAmount;
+
+  // Ref untuk cegah double insert (React Strict Mode)
+  const insertedRef = useRef(false);
+
+  // Simpan transaksi ke Supabase segera saat halaman ini dibuka
+  useEffect(() => {
+    if (capturedAmount > 0 && !insertedRef.current) {
+      insertedRef.current = true;
+
+      const saveTransaction = async () => {
+        try {
+          const { error: txError } = await supabase
+            .from('transactions')
+            .insert([
+              {
+                title: 'Final Capture',
+                amount: capturedAmount,
+                type: 'capture',
+                merchant: 'SmartStore - Sudirman',
+                reference_id: `SH-${Date.now()}`
+              },
+              {
+                title: 'Hold Released',
+                amount: releasedAmount,
+                type: 'release',
+                merchant: 'SmartStore - Sudirman',
+                reference_id: `SH-${Date.now()}`
+              }
+            ]);
+
+          if (txError) throw txError;
+          console.log('✅ Transactions logged to Supabase');
+
+          // Kurangi main_balance di user_cards
+          const { data: cardData, error: cardError } = await supabase
+            .from('user_cards')
+            .select('id, main_balance')
+            .limit(1)
+            .single();
+
+          if (cardError) throw cardError;
+
+          if (cardData) {
+            const newBalance = cardData.main_balance - capturedAmount;
+            const { error: updateError } = await supabase
+              .from('user_cards')
+              .update({ main_balance: newBalance })
+              .eq('id', cardData.id);
+
+            if (updateError) throw updateError;
+            console.log('✅ Balance deducted:', capturedAmount);
+          }
+        } catch (err) {
+          console.error('❌ Error saving transaction:', err);
+        }
+      };
+
+      saveTransaction();
+    }
+  }, [capturedAmount, releasedAmount]);
 
   return (
     <div className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display min-h-screen flex flex-col items-center">
