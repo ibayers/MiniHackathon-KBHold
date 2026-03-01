@@ -1,12 +1,14 @@
 ultralytics
-opencv-python
+opencv-python-headless
 flask
+supabase
 qrcode[pil]
 numpy
 flask-cors
+gunicorn
 
-Version
-we using python 3.10.12
+# Version
+# we using python 3.10.12
 # ultralytics==8.3.0
 # opencv-python==4.10.0.84
 # flask==3.0.0

@@ -8,6 +8,7 @@ from flask import Flask, jsonify, render_template_string, request
 import qrcode
 import numpy as np
 from flask_cors import CORS
+import os
 
 app = Flask(__name__)
 CORS(app)
@@ -266,7 +267,20 @@ def main():
     cap.release()
     cv2.destroyAllWindows()
 
+# if __name__ == "__main__":
+#     main()
+
 if __name__ == "__main__":
+    # Ini hanya jalan saat kamu running lokal: python swv6.py
+    port = int(os.environ.get("PORT", 10000))
+    flask_thread = threading.Thread(
+        target=lambda: app.run(host='0.0.0.0', port=port, debug=False, use_reloader=False),
+        daemon=True
+    )
+    flask_thread.start()
+    
+    # 2. Panggil fungsi main() untuk memunculkan QR dan Kamera
+    # Karena ini dijalankan di 'main thread', OpenCV bisa memunculkan jendela (GUI)
     main()
 
 # if __name__ == "__main__":
