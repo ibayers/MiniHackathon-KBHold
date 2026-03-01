@@ -37,7 +37,10 @@ const getRiskLevel = (score: number): RiskLevel => {
 const YELLOW_ITEMS = ['Aqua', 'Kopi', 'Minuman', 'Botol']; // Common pattern names
 
 // Mengambil URL dari .env, jika tidak ada pakai localhost
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+// Priority: localStorage (set saat scan QR) → VITE_API_URL → localhost
+const BASE_URL = localStorage.getItem('kbhold_backend_url')
+  || import.meta.env.VITE_API_URL
+  || 'http://localhost:5000';
 
 const LiveShopping: React.FC = () => {
   const navigate = useNavigate();

@@ -5,13 +5,19 @@ import { Html5QrcodeScanner } from "html5-qrcode";
 // Mengambil URL dari .env, jika tidak ada pakai localhost
 const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
-// Ambil backend URL dari query param jika ada (di-embed oleh Python di QR)
-// Contoh: /pairing-hub?backend=https://xxxx.ngrok.io
-const getBackendUrl = (): string => {
-  if (typeof window !== 'undefined') {
-    const params = new URLSearchParams(window.location.search);
-    const fromQR = params.get('backend');
-    if (fromQR) return fromQR;
+// Fungsi untuk extract backend URL dari konten QR yang di-scan
+// QR dari Python berisi: https://vercel.app/pairing-hub?backend=https://ngrok.io
+const extractBackendFromQR = (decodedText: string): string => {
+  try {
+    const qrUrl = new URL(decodedText);
+    const backendParam = qrUrl.searchParams.get('backend');
+    if (backendParam) {
+      // Simpan ke localStorage supaya LiveShopping.tsx juga bisa pakai
+      localStorage.setItem('kbhold_backend_url', backendParam);
+      return backendParam;
+    }
+  } catch {
+    // decodedText bukan URL valid, abaikan
   }
   return BASE_URL;
 };
@@ -34,9 +40,9 @@ const PairingHub: React.FC = () => {
       setScanResult(decodedText);
       scanner.clear();
 
-      // Gunakan backend URL dari query param (?backend=...) jika ada,
-      // jika tidak ada fallback ke VITE_API_URL / localhost
-      const backendUrl = getBackendUrl();
+      // Ekstrak backend URL dari konten QR yang baru di-scan
+      // QR Python berisi URL Vercel dengan ?backend=https://ngrok.io terembeded
+      const backendUrl = extractBackendFromQR(decodedText);
 
       try {
         // Kirim sinyal ke Flask lokal untuk nyalakan kamera
