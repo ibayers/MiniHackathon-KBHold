@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Html5QrcodeScanner } from "html5-qrcode";
 
+// Mengambil URL dari .env, jika tidak ada pakai localhost
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 const PairingHub: React.FC = () => {
   const navigate = useNavigate();
   const [scanResult, setScanResult] = useState<string | null>(null);
@@ -21,8 +24,8 @@ const PairingHub: React.FC = () => {
       scanner.clear();
 
       try {
-        // panggil backend Python menggunakan hostname yang fleksibel
-        await fetch(`http://${window.location.hostname}:5000/connect`);
+        // panggil backend menggunakan BASE_URL dari environment variable
+        await fetch(`${BASE_URL}/connect`);
         console.log("Python diberi sinyal untuk mulai kamera");
       } catch (err) {
         console.error("Gagal connect ke backend:", err);
@@ -32,7 +35,7 @@ const PairingHub: React.FC = () => {
       navigate("/live-shopping");
     };
 
-    const onScanFailure = (error: any) => {
+    const onScanFailure = (_error: string) => {
       // Handle failure silently to avoid console spam
     };
 

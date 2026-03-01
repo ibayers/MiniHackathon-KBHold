@@ -36,6 +36,9 @@ const getRiskLevel = (score: number): RiskLevel => {
 // Per-item dummy flags for YELLOW warning (mismatch)
 const YELLOW_ITEMS = ['Aqua', 'Kopi', 'Minuman', 'Botol']; // Common pattern names
 
+// Mengambil URL dari .env, jika tidak ada pakai localhost
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 const LiveShopping: React.FC = () => {
   const navigate = useNavigate();
   const tickRef = useRef(0);
@@ -60,7 +63,7 @@ const LiveShopping: React.FC = () => {
       setRiskScore(manualOverride !== null ? manualOverride : getDummyScore(tickRef.current));
 
       // Fetch cart data
-      fetch(`http://${window.location.hostname}:5000/data`)
+      fetch(`${BASE_URL}/data`)
         .then(res => res.json())
         .then(data => {
           const filtered: Record<string, Item> = {};
