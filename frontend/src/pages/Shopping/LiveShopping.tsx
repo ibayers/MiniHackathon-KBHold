@@ -68,7 +68,9 @@ const LiveShopping: React.FC = () => {
       setRiskScore(manualOverride !== null ? manualOverride : getDummyScore(tickRef.current));
 
       // Fetch cart data
-      fetch(`${getLiveBackendUrl()}/data`)
+      fetch(`${getLiveBackendUrl()}/data`, {
+        headers: { 'ngrok-skip-browser-warning': 'true' }
+      })
         .then(res => res.json())
         .then(data => {
           const filtered: Record<string, Item> = {};
