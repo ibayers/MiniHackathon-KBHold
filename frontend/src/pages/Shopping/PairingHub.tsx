@@ -46,7 +46,10 @@ const PairingHub: React.FC = () => {
 
       try {
         // Kirim sinyal ke Flask lokal untuk nyalakan kamera
-        await fetch(`${backendUrl}/connect`);
+        // Header ngrok-skip-browser-warning diperlukan agar ngrok tidak redirect ke halaman warning
+        await fetch(`${backendUrl}/connect`, {
+          headers: { 'ngrok-skip-browser-warning': 'true' }
+        });
         console.log("Python diberi sinyal untuk mulai kamera via:", backendUrl);
       } catch (err) {
         console.error("Gagal connect ke backend:", err);
