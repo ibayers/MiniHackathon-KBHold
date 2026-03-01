@@ -411,7 +411,19 @@ const LiveShopping: React.FC = () => {
                   </button>
                 ) : (
                   <button
-                    onClick={() => navigate('/exit-settlement', { state: { cartData: cart } })}
+                    onClick={async () => {
+                      // Hentikan kamera Python dengan memanggil /checkout
+                      try {
+                        await fetch(`${getLiveBackendUrl()}/checkout`, {
+                          method: 'POST',
+                          headers: { 'ngrok-skip-browser-warning': 'true' }
+                        });
+                        console.log('✅ Python camera stopped via /checkout');
+                      } catch (err) {
+                        console.log('Backend unreachable, proceeding anyway:', err);
+                      }
+                      navigate('/exit-settlement', { state: { cartData: cart } });
+                    }}
                     className="w-full bg-primary hover:bg-primary/90 text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 transition-colors active:scale-[0.98] border-none"
                   >
                     <span className="material-symbols-outlined">logout</span>
